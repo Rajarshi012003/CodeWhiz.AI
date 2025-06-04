@@ -1,1 +1,399 @@
+{
+  "array": {
+    "name": "Array",
+    "difficulty": "basic",
+    "description": "An array is a collection of elements identified by index or key, stored in contiguous memory locations.",
+    "properties": [
+      "Fixed size",
+      "Random access in O(1) time",
+      "Efficient iteration"
+    ],
+    "use_cases": [
+      "Storing data collections",
+      "Implementing other data structures (heaps, matrices)",
+      "Buffer management"
+    ],
+    "related_concepts": [
+      "dynamic_array",
+      "matrix",
+      "heap"
+    ],
+    "cpp_implementation": "\n#include <iostream>\nusing namespace std;\n\nint main() {\n    int arr[5] = {1, 2, 3, 4, 5};\n    for (int i = 0; i < 5; ++i) {\n        cout << arr[i] << \" \";\n    }\n    return 0;\n}\n"
+  },
+  "stack": {
+    "name": "Stack",
+    "difficulty": "basic",
+    "description": "A stack is a linear data structure that follows the Last-In-First-Out (LIFO) principle.",
+    "properties": [
+      "LIFO order",
+      "O(1) push and pop",
+      "Can be implemented with arrays or linked lists"
+    ],
+    "use_cases": [
+      "Expression evaluation",
+      "Backtracking algorithms",
+      "Function call management"
+    ],
+    "related_concepts": [
+      "queue",
+      "linked_list"
+    ],
+    "cpp_implementation": "\n#include <iostream>\n#define MAX 100\nclass Stack {\n    int top;\n    int arr[MAX];\npublic:\n    Stack() { top = -1; }\n    bool push(int x) {\n        if (top >= (MAX - 1)) return false;\n        arr[++top] = x;\n        return true;\n    }\n    int pop() {\n        if (top < 0) return -1;\n        return arr[top--];\n    }\n    int peek() {\n        if (top < 0) return -1;\n        return arr[top];\n    }\n};\n"
+  },
+  "queue": {
+    "name": "Queue",
+    "difficulty": "basic",
+    "description": "A queue is a linear data structure that follows the First-In-First-Out (FIFO) principle.",
+    "properties": [
+      "FIFO order",
+      "O(1) enqueue and dequeue",
+      "Can be implemented with arrays or linked lists"
+    ],
+    "use_cases": [
+      "Task scheduling",
+      "Breadth-first search",
+      "Buffer management"
+    ],
+    "related_concepts": [
+      "stack",
+      "priority_queue",
+      "deque"
+    ],
+    "cpp_implementation": "\n#include <iostream>\n#define MAX 100\nclass Queue {\n    int arr[MAX], front, rear;\npublic:\n    Queue() { front = 0; rear = 0; }\n    bool enqueue(int x) {\n        if ((rear + 1) % MAX == front) return false;\n        arr[rear] = x;\n        rear = (rear + 1) % MAX;\n        return true;\n    }\n    int dequeue() {\n        if (front == rear) return -1;\n        int x = arr[front];\n        front = (front + 1) % MAX;\n        return x;\n    }\n};\n"
+  },
+  "linked_list": {
+    "name": "Linked List",
+    "difficulty": "basic",
+    "description": "A linked list is a linear data structure where elements are stored in nodes, and each node points to the next node in the sequence.",
+    "properties": [
+      "Dynamic size",
+      "Efficient insertions and deletions",
+      "Sequential access (no random access)"
+    ],
+    "use_cases": [
+      "Implementing stacks and queues",
+      "Dynamic memory allocation",
+      "Representing graphs (adjacency list)"
+    ],
+    "related_concepts": [
+      "stack",
+      "queue",
+      "doubly_linked_list"
+    ],
+    "cpp_implementation": "\ntemplate<typename T>\nclass Node {\npublic:\n    T data;\n    Node* next;\n    \n    Node(T value) : data(value), next(nullptr) {}\n};\n\ntemplate<typename T>\nclass LinkedList {\nprivate:\n    Node<T>* head;\n    int size;\n    \npublic:\n    LinkedList() : head(nullptr), size(0) {}\n    \n    void insertAtBeginning(T value) {\n        Node<T>* newNode = new Node<T>(value);\n        newNode->next = head;\n        head = newNode;\n        size++;\n    }\n    \n    void insertAtEnd(T value) {\n        Node<T>* newNode = new Node<T>(value);\n        if (!head) {\n            head = newNode;\n            size++;\n            return;\n        }\n        \n        Node<T>* current = head;\n        while (current->next) {\n            current = current->next;\n        }\n        current->next = newNode;\n        size++;\n    }\n    \n    bool remove(T value) {\n        if (!head) return false;\n        \n        if (head->data == value) {\n            Node<T>* temp = head;\n            head = head->next;\n            delete temp;\n            size--;\n            return true;\n        }\n        \n        Node<T>* current = head;\n        while (current->next && current->next->data != value) {\n            current = current->next;\n        }\n        \n        if (current->next) {\n            Node<T>* temp = current->next;\n            current->next = temp->next;\n            delete temp;\n            size--;\n            return true;\n        }\n        \n        return false;\n    }\n    \n    int getSize() const {\n        return size;\n    }\n    \n    ~LinkedList() {\n        Node<T>* current = head;\n        while (current) {\n            Node<T>* next = current->next;\n            delete current;\n            current = next;\n        }\n    }\n};\n"
+  },
+  "binary_search_tree": {
+    "name": "Binary Search Tree",
+    "difficulty": "intermediate",
+    "description": "A binary search tree is a binary tree data structure where each node has at most two children, and for each node, all elements in the left subtree are less than the node, and all elements in the right subtree are greater.",
+    "properties": [
+      "Ordered structure",
+      "O(log n) search, insert, delete operations on balanced trees",
+      "In-order traversal yields sorted elements"
+    ],
+    "use_cases": [
+      "Implementing set and map ADTs",
+      "Database indexing",
+      "Priority queues"
+    ],
+    "related_concepts": [
+      "avl_tree",
+      "red_black_tree",
+      "binary_tree"
+    ],
+    "cpp_implementation": "\ntemplate<typename T>\nclass TreeNode {\npublic:\n    T data;\n    TreeNode* left;\n    TreeNode* right;\n    \n    TreeNode(T value) : data(value), left(nullptr), right(nullptr) {}\n};\n\ntemplate<typename T>\nclass BinarySearchTree {\nprivate:\n    TreeNode<T>* root;\n    \n    TreeNode<T>* insertRecursive(TreeNode<T>* node, T value) {\n        if (!node) return new TreeNode<T>(value);\n        \n        if (value < node->data) {\n            node->left = insertRecursive(node->left, value);\n        } else if (value > node->data) {\n            node->right = insertRecursive(node->right, value);\n        }\n        \n        return node;\n    }\n    \n    TreeNode<T>* searchRecursive(TreeNode<T>* node, T value) {\n        if (!node || node->data == value) return node;\n        \n        if (value < node->data) {\n            return searchRecursive(node->left, value);\n        } else {\n            return searchRecursive(node->right, value);\n        }\n    }\n    \n    TreeNode<T>* findMin(TreeNode<T>* node) {\n        TreeNode<T>* current = node;\n        while (current && current->left) {\n            current = current->left;\n        }\n        return current;\n    }\n    \n    TreeNode<T>* deleteRecursive(TreeNode<T>* node, T value) {\n        if (!node) return nullptr;\n        \n        if (value < node->data) {\n            node->left = deleteRecursive(node->left, value);\n        } else if (value > node->data) {\n            node->right = deleteRecursive(node->right, value);\n        } else {\n            // Case 1: Node is a leaf\n            if (!node->left && !node->right) {\n                delete node;\n                return nullptr;\n            }\n            // Case 2: Node has one child\n            else if (!node->left) {\n                TreeNode<T>* temp = node->right;\n                delete node;\n                return temp;\n            }\n            else if (!node->right) {\n                TreeNode<T>* temp = node->left;\n                delete node;\n                return temp;\n            }\n            // Case 3: Node has two children\n            TreeNode<T>* temp = findMin(node->right);\n            node->data = temp->data;\n            node->right = deleteRecursive(node->right, temp->data);\n        }\n        return node;\n    }\n    \n    void inOrderTraversalRecursive(TreeNode<T>* node, void (*visit)(T&)) {\n        if (node) {\n            inOrderTraversalRecursive(node->left, visit);\n            visit(node->data);\n            inOrderTraversalRecursive(node->right, visit);\n        }\n    }\n    \npublic:\n    BinarySearchTree() : root(nullptr) {}\n    \n    void insert(T value) {\n        root = insertRecursive(root, value);\n    }\n    \n    bool search(T value) {\n        return searchRecursive(root, value) != nullptr;\n    }\n    \n    void remove(T value) {\n        root = deleteRecursive(root, value);\n    }\n    \n    void inOrderTraversal(void (*visit)(T&)) {\n        inOrderTraversalRecursive(root, visit);\n    }\n    \n    ~BinarySearchTree() {\n        // Proper cleanup would require traversal and deletion\n    }\n};\n"
+  },
+  "heap": {
+    "name": "Heap",
+    "difficulty": "intermediate",
+    "description": "A heap is a complete binary tree-based data structure that satisfies the heap property: for a max-heap, each parent node is greater than or equal to its children; for a min-heap, each parent is less than or equal to its children.",
+    "properties": [
+      "Complete binary tree",
+      "Efficient access to min/max element",
+      "O(log n) insertion and deletion"
+    ],
+    "use_cases": [
+      "Priority queues",
+      "Heap sort",
+      "Graph algorithms (Dijkstra, Prim's)"
+    ],
+    "related_concepts": [
+      "priority_queue",
+      "binary_tree",
+      "array"
+    ],
+    "cpp_implementation": "\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nclass MinHeap {\n    vector<int> heap;\npublic:\n    void insert(int val) {\n        heap.push_back(val);\n        push_heap(heap.begin(), heap.end(), greater<int>());\n    }\n    int extractMin() {\n        pop_heap(heap.begin(), heap.end(), greater<int>());\n        int minVal = heap.back();\n        heap.pop_back();\n        return minVal;\n    }\n};\n"
+  },
+  "hash_table": {
+    "name": "Hash Table",
+    "difficulty": "intermediate",
+    "description": "A hash table is a data structure that maps keys to values using a hash function, allowing for average-case O(1) insertion, deletion, and lookup.",
+    "properties": [
+      "Key-value mapping",
+      "Efficient average-case operations",
+      "Collision handling (chaining, open addressing)"
+    ],
+    "use_cases": [
+      "Dictionaries and maps",
+      "Caching",
+      "Unique element storage"
+    ],
+    "related_concepts": [
+      "hash_map",
+      "hash_set",
+      "hash_function"
+    ],
+    "cpp_implementation": "\n#include <iostream>\n#include <list>\n#define TABLE_SIZE 10\nusing namespace std;\n\nclass HashTable {\n    list<pair<int, int>> table[TABLE_SIZE];\npublic:\n    void insert(int key, int value) {\n        int idx = key % TABLE_SIZE;\n        table[idx].push_back({key, value});\n    }\n    int search(int key) {\n        int idx = key % TABLE_SIZE;\n        for (auto &p : table[idx]) {\n            if (p.first == key) return p.second;\n        }\n        return -1;\n    }\n};\n"
+  },
+  "graph": {
+    "name": "Graph",
+    "difficulty": "intermediate",
+    "description": "A graph is a collection of nodes (vertices) and edges connecting pairs of nodes, used to model pairwise relations between objects.",
+    "properties": [
+      "Can be directed or undirected",
+      "Can be weighted or unweighted",
+      "Represented as adjacency list or matrix"
+    ],
+    "use_cases": [
+      "Network routing",
+      "Social networks",
+      "Dependency resolution"
+    ],
+    "related_concepts": [
+      "adjacency_list",
+      "adjacency_matrix",
+      "tree"
+    ],
+    "cpp_implementation": "\n#include <iostream>\n#include <vector>\nusing namespace std;\n\nclass Graph {\n    int V;\n    vector<vector<int>> adj;\npublic:\n    Graph(int V) : V(V), adj(V) {}\n    void addEdge(int u, int v) {\n        adj[u].push_back(v);\n    }\n};\n"
+  },
+  "dynamic_programming": {
+    "name": "Dynamic Programming",
+    "difficulty": "advanced",
+    "description": "Dynamic programming is an optimization technique that solves complex problems by breaking them down into simpler subproblems and storing the results of subproblems to avoid redundant computation.",
+    "properties": [
+      "Optimal substructure",
+      "Overlapping subproblems",
+      "Memoization or tabulation"
+    ],
+    "use_cases": [
+      "Fibonacci sequence",
+      "Knapsack problem",
+      "Longest common subsequence"
+    ],
+    "related_concepts": [
+      "recursion",
+      "memoization",
+      "divide_and_conquer"
+    ],
+    "cpp_implementation": "\n#include <iostream>\n#include <vector>\nusing namespace std;\n\nint fib(int n) {\n    vector<int> dp(n+1, 0);\n    dp[0] = 0; dp[1] = 1;\n    for (int i = 2; i <= n; ++i) {\n        dp[i] = dp[i-1] + dp[i-2];\n    }\n    return dp[n];\n}\n"
+  },
+  "divide_and_conquer": {
+    "name": "Divide and Conquer",
+    "difficulty": "intermediate",
+    "description": "Divide and conquer is an algorithmic paradigm that breaks a problem into smaller subproblems, solves them recursively, and combines their solutions.",
+    "properties": [
+      "Problem decomposition",
+      "Recursive solution",
+      "Merging of subproblem results"
+    ],
+    "use_cases": [
+      "Merge sort",
+      "Quick sort",
+      "Binary search"
+    ],
+    "related_concepts": [
+      "recursion",
+      "dynamic_programming"
+    ],
+    "cpp_implementation": "\n// Merge Sort Example\n#include <iostream>\nusing namespace std;\nvoid merge(int arr[], int l, int m, int r) {\n    int n1 = m - l + 1;\n    int n2 = r - m;\n    int L[n1], R[n2];\n    for (int i = 0; i < n1; i++) L[i] = arr[l + i];\n    for (int j = 0; j < n2; j++) R[j] = arr[m + 1 + j];\n    int i = 0, j = 0, k = l;\n    while (i < n1 && j < n2) arr[k++] = (L[i] <= R[j]) ? L[i++] : R[j++];\n    while (i < n1) arr[k++] = L[i++];\n    while (j < n2) arr[k++] = R[j++];\n}\nvoid mergeSort(int arr[], int l, int r) {\n    if (l < r) {\n        int m = l + (r - l) / 2;\n        mergeSort(arr, l, m);\n        mergeSort(arr, m + 1, r);\n        merge(arr, l, m, r);\n    }\n}\n"
+  },
+  "greedy": {
+    "name": "Greedy Algorithm",
+    "difficulty": "intermediate",
+    "description": "A greedy algorithm builds up a solution piece by piece, always choosing the next piece that offers the most immediate benefit.",
+    "properties": [
+      "Locally optimal choices",
+      "No backtracking",
+      "Simple and efficient for some problems"
+    ],
+    "use_cases": [
+      "Huffman coding",
+      "Minimum spanning tree",
+      "Activity selection"
+    ],
+    "related_concepts": [
+      "dynamic_programming",
+      "graph"
+    ],
+    "cpp_implementation": "\n// Activity Selection Example\n#include <algorithm>\n#include <vector>\nusing namespace std;\nstruct Activity { int start, finish; };\nbool compare(Activity a, Activity b) { return a.finish < b.finish; }\nint activitySelection(vector<Activity>& activities) {\n    sort(activities.begin(), activities.end(), compare);\n    int count = 1, lastFinish = activities[0].finish;\n    for (size_t i = 1; i < activities.size(); ++i) {\n        if (activities[i].start >= lastFinish) {\n            ++count;\n            lastFinish = activities[i].finish;\n        }\n    }\n    return count;\n}\n"
+  },
+  "recursion": {
+    "name": "Recursion",
+    "difficulty": "basic",
+    "description": "Recursion is a programming technique where a function calls itself to solve smaller instances of a problem.",
+    "properties": [
+      "Base case and recursive case",
+      "Stack-based execution",
+      "Can lead to stack overflow if not managed"
+    ],
+    "use_cases": [
+      "Tree traversals",
+      "Divide and conquer algorithms",
+      "Backtracking"
+    ],
+    "related_concepts": [
+      "stack",
+      "divide_and_conquer",
+      "dynamic_programming"
+    ],
+    "cpp_implementation": "\n// Factorial Example\nint factorial(int n) {\n    if (n == 0) return 1;\n    return n * factorial(n - 1);\n}\n"
+  },
+  "trie": {
+    "name": "Trie",
+    "difficulty": "intermediate",
+    "description": "A trie is a tree-like data structure used to efficiently store and retrieve keys in a dataset of strings.",
+    "properties": [
+      "Prefix-based storage",
+      "Efficient search, insert, delete for strings",
+      "Space-intensive for sparse data"
+    ],
+    "use_cases": [
+      "Autocomplete",
+      "Spell checking",
+      "IP routing"
+    ],
+    "related_concepts": [
+      "tree",
+      "hash_table"
+    ],
+    "cpp_implementation": "\nstruct TrieNode {\n    TrieNode* children[26];\n    bool isEndOfWord;\n    TrieNode() {\n        for (int i = 0; i < 26; i++) children[i] = nullptr;\n        isEndOfWord = false;\n    }\n};\nvoid insert(TrieNode* root, string key) {\n    TrieNode* node = root;\n    for (char c : key) {\n        int idx = c - 'a';\n        if (!node->children[idx]) node->children[idx] = new TrieNode();\n        node = node->children[idx];\n    }\n    node->isEndOfWord = true;\n}\nbool search(TrieNode* root, string key) {\n    TrieNode* node = root;\n    for (char c : key) {\n        int idx = c - 'a';\n        if (!node->children[idx]) return false;\n        node = node->children[idx];\n    }\n    return node->isEndOfWord;\n}\n"
+  },
+    "avl_tree": {
+      "name": "AVL Tree",
+      "difficulty": "advanced",
+      "description": "Self-balancing binary search tree with height difference constraint of 1 between subtrees",
+      "properties": [
+        "Height-balanced",
+        "O(log n) operations",
+        "Rotation-based balancing"
+      ],
+      "use_cases": [
+        "Database indexing",
+        "Memory management systems",
+        "Frequency-sorted streams"
+      ],
+      "related_concepts": [
+        "binary_search_tree",
+        "red_black_tree",
+        "tree_rotations"
+      ],
+      "cpp_implementation": "\nstruct AVLNode {\n    int key, height;\n    AVLNode *left, *right;\n    AVLNode(int k) : key(k), height(1), left(nullptr), right(nullptr) {}\n};\n\nAVLNode* rotateRight(AVLNode* y) {\n    AVLNode* x = y->left;\n    y->left = x->right;\n    x->right = y;\n    y->height = 1 + std::max(height(y->left), height(y->right));\n    x->height = 1 + std::max(height(x->left), height(x->right));\n    return x;\n}"
+    },
+    "segment_tree": {
+      "name": "Segment Tree",
+      "difficulty": "advanced",
+      "description": "Tree data structure for efficient range queries and updates",
+      "properties": [
+        "O(n) construction",
+        "O(log n) query/update",
+        "Full binary tree structure"
+      ],
+      "use_cases": [
+        "Range sum/min/max queries",
+        "Interval scheduling",
+        "Dynamic frequency counting"
+      ],
+      "related_concepts": [
+        "binary_indexed_tree",
+        "range_queries",
+        "divide_and_conquer"
+      ],
+      "cpp_implementation": "\nclass SegmentTree {\n    vector<int> tree;\n    int n;\n    void build(const vector<int>& arr, int node, int start, int end) {\n        if (start == end) {\n            tree[node] = arr[start];\n        } else {\n            int mid = (start + end) / 2;\n            build(arr, 2*node+1, start, mid);\n            build(arr, 2*node+2, mid+1, end);\n            tree[node] = tree[2*node+1] + tree[2*node+2];\n        }\n    }\npublic:\n    SegmentTree(const vector<int>& arr) {\n        n = arr.size();\n        tree.resize(4*n);\n        build(arr, 0, 0, n-1);\n    }\n};"
+    },
+    "disjoint_set_union": {
+      "name": "Disjoint Set Union",
+      "difficulty": "intermediate",
+      "description": "Data structure for managing partitions with union and find operations",
+      "properties": [
+        "Path compression",
+        "Union by rank/size",
+        "Near-constant time operations"
+      ],
+      "use_cases": [
+        "Kruskal's algorithm",
+        "Connected components",
+        "Image segmentation"
+      ],
+      "related_concepts": [
+        "minimum_spanning_tree",
+        "graph_connectivity",
+        "greedy_algorithms"
+      ],
+      "cpp_implementation": "\nclass DSU {\n    vector<int> parent, rank;\npublic:\n    DSU(int n) : parent(n), rank(n,1) {\n        iota(parent.begin(), parent.end(), 0);\n    }\n    int find(int u) {\n        return parent[u] == u ? u : parent[u] = find(parent[u]);\n    }\n    void unite(int u, int v) {\n        u = find(u), v = find(v);\n        if (rank[u] < rank[v]) swap(u, v);\n        parent[v] = u;\n        if (rank[u] == rank[v]) rank[u]++;\n    }\n};"
+    },
+    "bellman_ford": {
+      "name": "Bellman-Ford",
+      "difficulty": "advanced",
+      "description": "Single-source shortest path algorithm handling negative weights",
+      "properties": [
+        "Detects negative cycles",
+        "O(VE) time complexity",
+        "Edge relaxation"
+      ],
+      "use_cases": [
+        "Currency arbitrage detection",
+        "Network routing with negative costs",
+        "Game theory applications"
+      ],
+      "related_concepts": [
+        "dijkstra",
+        "shortest_path",
+        "dynamic_programming"
+      ],
+      "cpp_implementation": "\nvector<int> bellmanFord(vector<tuple<int,int,int>>& edges, int n, int src) {\n    vector<int> dist(n, INT_MAX);\n    dist[src] = 0;\n    for (int i = 0; i < n-1; ++i)\n        for (auto& [u, v, w] : edges)\n            if (dist[u] != INT_MAX && dist[v] > dist[u] + w)\n                dist[v] = dist[u] + w;\n    return dist;\n}"
+    },
+    "suffix_array": {
+      "name": "Suffix Array",
+      "difficulty": "advanced",
+      "description": "Sorted array of all suffixes of a string for efficient pattern matching",
+      "properties": [
+        "O(n log n) construction",
+        "Space-efficient alternative to suffix trees",
+        "Enables binary search on suffixes"
+      ],
+      "use_cases": [
+        "Genome sequence analysis",
+        "Full-text indices",
+        "Longest common substring"
+      ],
+      "related_concepts": [
+        "string_matching",
+        "divide_and_conquer",
+        "radix_sort"
+      ],
+      "cpp_implementation": "\nvector<int> buildSuffixArray(const string& s) {\n    int n = s.size();\n    vector<int> sa(n), ranks(n);\n    iota(sa.begin(), sa.end(), 0);\n    sort(sa.begin(), sa.end(), [&](int i, int j) { return s[i] < s[j]; });\n    for (int k = 1; k < n; k *= 2) {\n        // Implementation continues...\n    }\n    return sa;\n}"
+    },
+    "fenwick_tree": {
+      "name": "Fenwick Tree",
+      "difficulty": "intermediate",
+      "description": "Binary indexed tree for efficient prefix sum queries and updates",
+      "properties": [
+        "O(log n) operations",
+        "1-based indexing",
+        "Space-efficient"
+      ],
+      "use_cases": [
+        "Dynamic frequency tables",
+        "Inversion count",
+        "Range updates"
+      ],
+      "related_concepts": [
+        "prefix_sum",
+        "segment_tree",
+        "cumulative_frequency"
+      ],
+      "cpp_implementation": "\nclass FenwickTree {\n    vector<int> tree;\npublic:\n    FenwickTree(int n) : tree(n+1) {}\n    void update(int idx, int delta) {\n        for (; idx < tree.size(); idx += idx & -idx)\n            tree[idx] += delta;\n    }\n    int query(int idx) {\n        int sum = 0;\n        for (; idx > 0; idx -= idx & -idx)\n            sum += tree[idx];\n        return sum;\n    }\n};"
+    }
+
+}
 
