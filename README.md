@@ -1,7 +1,7 @@
 # CodeWhiz.AI 🧙‍♀️💬
 “Talk to a true algorithm whiz!!”
 
-# 👩🏻‍🏫📚💻 **DSA Tutor Chatbot**
+# 👩🏻‍🏫💻 **DSA Tutor Chatbot**
 
 > *A local-first Data Structures and Algorithms (DSA) tutor chatbot that runs entirely on your machine — no cloud, just power! ⚡*
 
