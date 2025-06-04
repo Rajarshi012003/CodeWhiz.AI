@@ -10,7 +10,7 @@
 ## 📚 Overview
 
 The **DSA Tutor Chatbot** is designed to help users learn **Data Structures and Algorithms** through **interactive conversations**, **quizzes**, and **live C++ code execution**.
-It leverages a **Retrieval-Augmented Generation (RAG)** architecture to provide accurate and contextually relevant information on DSA concepts.
+It leverages a **Retrieval-Augmented Generation (RAG)** architecture powered by TinyLlama 🦙 to provide accurate and contextually relevant information on DSA concepts.
 
 ---
 
