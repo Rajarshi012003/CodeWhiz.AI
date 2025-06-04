@@ -1,0 +1,734 @@
+{
+  "bubble_sort": {
+    "name": "Bubble Sort",
+    "category": "sorting",
+    "difficulty": "beginner",
+    "time_complexity": {
+      "best": "O(n)",
+      "average": "O(n^2)",
+      "worst": "O(n^2)"
+    },
+    "space_complexity": "O(1)",
+    "description": "Simple comparison-based sorting that repeatedly swaps adjacent elements if they're in wrong order",
+    "advantages": [
+      "Easy to implement",
+      "In-place sorting",
+      "Stable sort"
+    ],
+    "disadvantages": [
+      "Impractical for large datasets",
+      "Poor performance compared to O(n log n) algorithms"
+    ],
+    "cpp_implementation": "template<typename T>\nvoid bubbleSort(std::vector<T>& arr) {\n    int n = arr.size();\n    for (int i = 0; i < n-1; i++) {\n        for (int j = 0; j < n-i-1; j++) {\n            if (arr[j] > arr[j+1]) {\n                std::swap(arr[j], arr[j+1]);\n            }\n        }\n    }\n}"
+  },
+  "counting_sort": {
+    "name": "Counting Sort",
+    "category": "sorting",
+    "difficulty": "intermediate",
+    "time_complexity": {
+      "best": "O(n + k)",
+      "average": "O(n + k)",
+      "worst": "O(n + k)"
+    },
+    "space_complexity": "O(n + k)",
+    "description": "Non-comparative integer sorting that counts occurrences of each element",
+    "advantages": [
+      "Linear time complexity for small integer ranges",
+      "Stable sorting"
+    ],
+    "disadvantages": [
+      "Only works with integer keys",
+      "Inefficient for large value ranges"
+    ],
+    "cpp_implementation": "void countingSort(std::vector<int>& arr) {\n    int max = *max_element(arr.begin(), arr.end());\n    int min = *min_element(arr.begin(), arr.end());\n    int range = max - min + 1;\n    \n    std::vector<int> count(range), output(arr.size());\n    for (int num : arr) count[num - min]++;\n    \n    for (int i = 1; i < range; i++) count[i] += count[i-1];\n    \n    for (int i = arr.size()-1; i >= 0; i--) {\n        output[count[arr[i] - min] - 1] = arr[i];\n        count[arr[i] - min]--;\n    }\n    arr = output;\n}"
+  },
+  "quick_sort": {
+    "name": "Quick Sort",
+    "category": "sorting",
+    "difficulty": "intermediate",
+    "time_complexity": {
+      "best": "O(n log n)",
+      "average": "O(n log n)",
+      "worst": "O(n^2)"
+    },
+    "space_complexity": "O(log n)",
+    "description": "Divide-and-conquer algorithm using pivot element to partition array",
+    "advantages": [
+      "Fast average-case performance",
+      "In-place implementation possible",
+      "Cache-efficient"
+    ],
+    "disadvantages": [
+      "Worst-case O(n^2) performance",
+      "Not stable"
+    ],
+    "cpp_implementation": "template<typename T>\nint partition(std::vector<T>& arr, int low, int high) {\n    T pivot = arr[high];\n    int i = low - 1;\n    for (int j = low; j < high; j++) {\n        if (arr[j] <= pivot) {\n            i++;\n            std::swap(arr[i], arr[j]);\n        }\n    }\n    std::swap(arr[i+1], arr[high]);\n    return i+1;\n}\n\ntemplate<typename T>\nvoid quickSort(std::vector<T>& arr, int low, int high) {\n    if (low < high) {\n        int pi = partition(arr, low, high);\n        quickSort(arr, low, pi-1);\n        quickSort(arr, pi+1, high);\n    }\n}"
+  },
+  "merge_sort": {
+    "name": "Merge Sort",
+    "category": "sorting",
+    "difficulty": "intermediate",
+    "time_complexity": {
+      "best": "O(n log n)",
+      "average": "O(n log n)",
+      "worst": "O(n log n)"
+    },
+    "space_complexity": "O(n)",
+    "description": "Stable, divide-and-conquer sorting using merging of sorted subarrays",
+    "advantages": [
+      "Stable sorting",
+      "Consistent O(n log n) performance",
+      "Good for linked lists"
+    ],
+    "disadvantages": [
+      "Requires O(n) auxiliary space",
+      "Slower than quick sort in practice"
+    ],
+    "cpp_implementation": "template<typename T>\nvoid merge(std::vector<T>& arr, int left, int mid, int right) {\n    std::vector<T> temp(right - left + 1);\n    int i = left, j = mid+1, k = 0;\n    \n    while (i <= mid && j <= right) {\n        temp[k++] = (arr[i] <= arr[j]) ? arr[i++] : arr[j++];\n    }\n    while (i <= mid) temp[k++] = arr[i++];\n    while (j <= right) temp[k++] = arr[j++];\n    \n    for (int p = 0; p < k; p++) {\n        arr[left + p] = temp[p];\n    }\n}\n\ntemplate<typename T>\nvoid mergeSort(std::vector<T>& arr, int left, int right) {\n    if (left < right) {\n        int mid = left + (right - left)/2;\n        mergeSort(arr, left, mid);\n        mergeSort(arr, mid+1, right);\n        merge(arr, left, mid, right);\n    }\n}"
+  },
+  "radix_sort": {
+    "name": "Radix Sort",
+    "category": "sorting",
+    "difficulty": "advanced",
+    "time_complexity": {
+      "best": "O(nk)",
+      "average": "O(nk)",
+      "worst": "O(nk)"
+    },
+    "space_complexity": "O(n + k)",
+    "description": "Digit-based non-comparative sorting using counting sort as subroutine",
+    "advantages": [
+      "Linear time for fixed-width integers",
+      "Stable sorting"
+    ],
+    "disadvantages": [
+      "Complex implementation",
+      "Requires digit/character keys"
+    ],
+    "cpp_implementation": "void countingSortRadix(std::vector<int>& arr, int exp) {\n    std::vector<int> output(arr.size());\n    int count[10] = {0};\n    \n    for (int num : arr) count[(num/exp)%10]++;\n    for (int i = 1; i < 10; i++) count[i] += count[i-1];\n    \n    for (int i = arr.size()-1; i >= 0; i--) {\n        output[count[(arr[i]/exp)%10] - 1] = arr[i];\n        count[(arr[i]/exp)%10]--;\n    }\n    arr = output;\n}\n\nvoid radixSort(std::vector<int>& arr) {\n    int max_num = *max_element(arr.begin(), arr.end());\n    for (int exp = 1; max_num/exp > 0; exp *= 10) {\n        countingSortRadix(arr, exp);\n    }\n}"
+  },
+  "heap_sort": {
+    "name": "Heap Sort",
+    "category": "sorting",
+    "difficulty": "intermediate",
+    "time_complexity": {
+      "best": "O(n log n)",
+      "average": "O(n log n)",
+      "worst": "O(n log n)"
+    },
+    "space_complexity": "O(1)",
+    "description": "Comparison-based sorting using binary heap data structure",
+    "advantages": [
+      "In-place sorting",
+      "Guaranteed O(n log n) performance"
+    ],
+    "disadvantages": [
+      "Not stable",
+      "Poor cache locality"
+    ],
+    "cpp_implementation": "void heapify(std::vector<int>& arr, int n, int i) {\n    int largest = i;\n    int left = 2*i + 1;\n    int right = 2*i + 2;\n    \n    if (left < n && arr[left] > arr[largest]) largest = left;\n    if (right < n && arr[right] > arr[largest]) largest = right;\n    \n    if (largest != i) {\n        std::swap(arr[i], arr[largest]);\n        heapify(arr, n, largest);\n    }\n}\n\nvoid heapSort(std::vector<int>& arr) {\n    int n = arr.size();\n    for (int i = n/2 - 1; i >= 0; i--) {\n        heapify(arr, n, i);\n    }\n    for (int i = n-1; i > 0; i--) {\n        std::swap(arr[0], arr[i]);\n        heapify(arr, i, 0);\n    }\n}"
+  },
+  "linear_search": {
+      "name": "Linear Search",
+      "category": "searching",
+      "difficulty": "beginner",
+      "time_complexity": {
+        "best": "O(1)",
+        "average": "O(n)",
+        "worst": "O(n)"
+      },
+      "space_complexity": "O(1)",
+      "description": "Sequentially checks each element of the list until the target element is found or the list ends.",
+      "advantages": [
+        "Very simple to implement",
+        "Works on unsorted data",
+        "No extra space required"
+      ],
+      "disadvantages": [
+        "Inefficient for large datasets",
+        "Average and worst-case time is linear"
+      ],
+      "cpp_implementation": "template<typename T>\nint linearSearch(const std::vector<T>& arr, T key) {\n    for (int i = 0; i < arr.size(); i++) {\n        if (arr[i] == key)\n            return i;\n    }\n    return -1;\n}"
+    },
+    "binary_search": {
+      "name": "Binary Search",
+      "category": "searching",
+      "difficulty": "beginner",
+      "time_complexity": {
+        "best": "O(1)",
+        "average": "O(log n)",
+        "worst": "O(log n)"
+      },
+      "space_complexity": "O(1)",
+      "description": "Efficiently finds the position of a target value within a sorted array by repeatedly dividing the search interval in half.",
+      "advantages": [
+        "Very efficient for large, sorted datasets",
+        "Logarithmic time complexity"
+      ],
+      "disadvantages": [
+        "Requires sorted data",
+        "Not suitable for linked lists"
+      ],
+      "cpp_implementation": "template<typename T>\nint binarySearch(const std::vector<T>& arr, T key) {\n    int left = 0, right = arr.size() - 1;\n    while (left <= right) {\n        int mid = left + (right - left) / 2;\n        if (arr[mid] == key)\n            return mid;\n        else if (arr[mid] < key)\n            left = mid + 1;\n        else\n            right = mid - 1;\n    }\n    return -1;\n}"
+    },
+    "interpolation_search": {
+      "name": "Interpolation Search",
+      "category": "searching",
+      "difficulty": "intermediate",
+      "time_complexity": {
+        "best": "O(1)",
+        "average": "O(log log n)",
+        "worst": "O(n)"
+      },
+      "space_complexity": "O(1)",
+      "description": "An improved variant of binary search for uniformly distributed sorted data, estimates the position of the target using the values.",
+      "advantages": [
+        "Faster than binary search for uniformly distributed data",
+        "Log-logarithmic average time complexity"
+      ],
+      "disadvantages": [
+        "Requires sorted and uniformly distributed data",
+        "Can degrade to linear time if distribution is non-uniform"
+      ],
+      "cpp_implementation": "int interpolationSearch(const std::vector<int>& arr, int key) {\n    int low = 0, high = arr.size() - 1;\n    while (low <= high && key >= arr[low] && key <= arr[high]) {\n        if (low == high) {\n            if (arr[low] == key) return low;\n            return -1;\n        }\n        int pos = low + ((double)(high - low) / (arr[high] - arr[low])) * (key - arr[low]);\n        if (arr[pos] == key)\n            return pos;\n        if (arr[pos] < key)\n            low = pos + 1;\n        else\n            high = pos - 1;\n    }\n    return -1;\n}"
+    },
+  "breadth_first_search": {
+        "name": "Breadth-First Search",
+        "category": "graph",
+        "difficulty": "intermediate",
+        "time_complexity": "O(V + E)",
+        "space_complexity": "O(V)",
+        "description": "Explores graph in levels using queue, useful for shortest path in unweighted graphs",
+        "advantages": [
+          "Finds shortest path in unweighted graphs",
+          "Complete for finite graphs"
+        ],
+        "disadvantages": [
+          "High memory usage for large graphs",
+          "Not suitable for weighted graphs"
+        ],
+        "cpp_implementation": "void BFS(std::vector<std::vector<int>>& graph, int start) {\n    std::queue<int> q;\n    std::vector<bool> visited(graph.size(), false);\n    q.push(start);\n    visited[start] = true;\n    \n    while (!q.empty()) {\n        int u = q.front();\n        q.pop();\n        for (int v : graph[u]) {\n            if (!visited[v]) {\n                visited[v] = true;\n                q.push(v);\n            }\n        }\n    }\n}"
+      },
+      "depth_first_search": {
+        "name": "Depth-First Search",
+        "category": "graph",
+        "difficulty": "intermediate",
+        "time_complexity": "O(V + E)",
+        "space_complexity": "O(V)",
+        "description": "Explores graph depth-wise using stack/recursion, useful for path finding and cycle detection",
+        "advantages": [
+          "Low memory footprint",
+          "Good for topological sorting"
+        ],
+        "disadvantages": [
+          "Doesn't find shortest path",
+          "Can get stuck in infinite graphs"
+        ],
+        "cpp_implementation": "void DFS(std::vector<std::vector<int>>& graph, int u, std::vector<bool>& visited) {\n    visited[u] = true;\n    for (int v : graph[u]) {\n        if (!visited[v]) {\n            DFS(graph, v, visited);\n        }\n    }\n}"
+      },
+      "dijkstra": {
+        "name": "Dijkstra's Algorithm",
+        "category": "graph",
+        "difficulty": "advanced",
+        "time_complexity": "O((V + E) log V)",
+        "space_complexity": "O(V)",
+        "description": "Finds shortest paths from source to all nodes in weighted graphs with non-negative edges",
+        "advantages": [
+          "Guaranteed optimal paths",
+          "Efficient with priority queue"
+        ],
+        "disadvantages": [
+          "Fails with negative weights",
+          "Requires complete graph traversal"
+        ],
+        "cpp_implementation": "void dijkstra(std::vector<std::vector<std::pair<int, int>>>& graph, int src) {\n    std::priority_queue<std::pair<int, int>, std::vector<std::pair<int, int>>, std::greater<>> pq;\n    std::vector<int> dist(graph.size(), INT_MAX);\n    dist[src] = 0;\n    pq.emplace(0, src);\n    \n    while (!pq.empty()) {\n        auto [d, u] = pq.top();\n        pq.pop();\n        if (d > dist[u]) continue;\n        for (auto& [v, w] : graph[u]) {\n            if (dist[v] > dist[u] + w) {\n                dist[v] = dist[u] + w;\n                pq.emplace(dist[v], v);\n            }\n        }\n    }\n}"
+      },
+      "prim": {
+        "name": "Prim's Algorithm",
+        "category": "graph",
+        "difficulty": "advanced",
+        "time_complexity": "O(E log V)",
+        "space_complexity": "O(V)",
+        "description": "Greedy algorithm for finding minimum spanning tree (MST) in weighted undirected graphs",
+        "advantages": [
+          "Efficient for dense graphs",
+          "Always finds MST"
+        ],
+        "disadvantages": [
+          "Requires connected graph",
+          "Not optimal for sparse graphs"
+        ],
+        "cpp_implementation": "int prim(std::vector<std::vector<std::pair<int, int>>>& graph) {\n    std::priority_queue<std::pair<int, int>, std::vector<std::pair<int, int>>, std::greater<>> pq;\n    std::vector<bool> inMST(graph.size(), false);\n    int mstWeight = 0;\n    pq.emplace(0, 0);\n    \n    while (!pq.empty()) {\n        auto [w, u] = pq.top();\n        pq.pop();\n        if (inMST[u]) continue;\n        inMST[u] = true;\n        mstWeight += w;\n        for (auto& [v, weight] : graph[u]) {\n            if (!inMST[v]) {\n                pq.emplace(weight, v);\n            }\n        }\n    }\n    return mstWeight;\n}"
+      },
+      "kruskal": {
+        "name": "Kruskal's Algorithm",
+        "category": "graph",
+        "difficulty": "advanced",
+        "time_complexity": "O(E log E)",
+        "space_complexity": "O(V)",
+        "description": "Finds MST using union-find to add edges in order of increasing weight",
+        "advantages": [
+          "Efficient for sparse graphs",
+          "Works with disconnected graphs"
+        ],
+        "disadvantages": [
+          "Requires edge sorting",
+          "Slower for dense graphs"
+        ],
+        "cpp_implementation": "struct Edge { int u, v, weight; };\n\nint kruskal(std::vector<Edge>& edges, int n) {\n    std::sort(edges.begin(), edges.end(), [](Edge& a, Edge& b) { return a.weight < b.weight; });\n    std::vector<int> parent(n);\n    iota(parent.begin(), parent.end(), 0);\n    \n    auto find = [&](int u) {\n        while (parent[u] != u) u = parent[u];\n        return u;\n    };\n    \n    int mstWeight = 0;\n    for (auto& edge : edges) {\n        int pu = find(edge.u), pv = find(edge.v);\n        if (pu != pv) {\n            parent[pu] = pv;\n            mstWeight += edge.weight;\n        }\n    }\n    return mstWeight;\n}"
+      },
+      "topological_sort": {
+        "name": "Topological Sorting",
+        "category": "graph",
+        "difficulty": "intermediate",
+        "time_complexity": "O(V + E)",
+        "space_complexity": "O(V)",
+        "description": "Linear ordering of vertices in DAG where u comes before v for every directed edge (u,v)",
+        "advantages": [
+          "Essential for task scheduling",
+          "Detects cycles in DAGs"
+        ],
+        "disadvantages": [
+          "Only works for DAGs",
+          "Multiple valid orderings possible"
+        ],
+        "cpp_implementation": "std::vector<int> topologicalSort(std::vector<std::vector<int>>& graph) {\n    int n = graph.size();\n    std::vector<int> inDegree(n, 0), result;\n    for (auto& neighbors : graph)\n        for (int v : neighbors)\n            inDegree[v]++;\n    \n    std::queue<int> q;\n    for (int i = 0; i < n; i++)\n        if (inDegree[i] == 0) q.push(i);\n    \n    while (!q.empty()) {\n        int u = q.front();\n        q.pop();\n        result.push_back(u);\n        for (int v : graph[u])\n            if (--inDegree[v] == 0)\n                q.push(v);\n    }\n    return result;\n}"
+      },
+  "kadane": {
+          "name": "Kadane's Algorithm",
+          "category": "dynamic programming",
+          "difficulty": "intermediate",
+          "time_complexity": "O(n)",
+          "space_complexity": "O(1)",
+          "description": "Finds maximum sum of contiguous subarray in 1D array",
+          "advantages": [
+            "Efficient linear time solution",
+            "Constant space complexity"
+          ],
+          "disadvantages": [
+            "Only works for contiguous subarrays",
+            "Requires at least one positive number"
+          ],
+          "cpp_implementation": "int maxSubArray(std::vector<int>& nums) {\n    int max_current = nums[0], max_global = nums[0];\n    for (int i = 1; i < nums.size(); i++) {\n        max_current = std::max(nums[i], max_current + nums[i]);\n        max_global = std::max(max_global, max_current);\n    }\n    return max_global;\n}"
+        },
+        "longest_common_subsequence": {
+          "name": "Longest Common Subsequence",
+          "category": "dynamic programming",
+          "difficulty": "advanced",
+          "time_complexity": "O(mn)",
+          "space_complexity": "O(mn)",
+          "description": "Finds length of longest common subsequence between two strings",
+          "advantages": [
+            "Handles non-contiguous sequences",
+            "Foundation for many string comparison problems"
+          ],
+          "disadvantages": [
+            "Quadratic space complexity",
+            "Doesn't return the actual subsequence"
+          ],
+          "cpp_implementation": "int lcs(std::string& text1, std::string& text2) {\n    int m = text1.size(), n = text2.size();\n    std::vector<std::vector<int>> dp(m+1, std::vector<int>(n+1, 0));\n    \n    for (int i = 1; i <= m; i++) {\n        for (int j = 1; j <= n; j++) {\n            if (text1[i-1] == text2[j-1])\n                dp[i][j] = dp[i-1][j-1] + 1;\n            else\n                dp[i][j] = std::max(dp[i-1][j], dp[i][j-1]);\n        }\n    }\n    return dp[m][n];\n}"
+        },
+        "coin_change": {
+          "name": "Coin Change Problem",
+          "category": "dynamic programming",
+          "difficulty": "intermediate",
+          "time_complexity": "O(n*amount)",
+          "space_complexity": "O(amount)",
+          "description": "Counts number of ways to make change for amount using given coin denominations",
+          "advantages": [
+            "Solves classic combinatorial problem",
+            "Efficient DP approach"
+          ],
+          "disadvantages": [
+            "Assumes infinite coin supply",
+            "Doesn't track actual combinations"
+          ],
+          "cpp_implementation": "int coinChange(std::vector<int>& coins, int amount) {\n    std::vector<int> dp(amount + 1, 0);\n    dp[0] = 1;\n    \n    for (int coin : coins) {\n        for (int i = coin; i <= amount; i++) {\n            dp[i] += dp[i - coin];\n        }\n    }\n    return dp[amount];\n}"
+        },
+  "interval_scheduling": {
+            "name": "Interval Scheduling",
+            "category": "greedy",
+            "difficulty": "intermediate",
+            "time_complexity": "O(n log n)",
+            "space_complexity": "O(1)",
+            "description": "Selects maximum number of non-overlapping intervals using greedy selection of earliest finishing times",
+            "advantages": [
+              "Optimal for interval selection",
+              "Efficient implementation"
+            ],
+            "disadvantages": [
+              "Only works for interval selection problems",
+              "Requires sorted input"
+            ],
+            "cpp_implementation": "struct Interval { int start, end; };\n\nint maxNonOverlapping(std::vector<Interval>& intervals) {\n    if (intervals.empty()) return 0;\n    std::sort(intervals.begin(), intervals.end(), [](Interval& a, Interval& b) { return a.end < b.end; });\n    int count = 1, last_end = intervals[0].end;\n    for (auto& interval : intervals) {\n        if (interval.start >= last_end) {\n            count++;\n            last_end = interval.end;\n        }\n    }\n    return count;\n}"
+          },
+          "huffman_coding": {
+            "name": "Huffman Coding",
+            "category": "greedy",
+            "difficulty": "advanced",
+            "time_complexity": "O(n log n)",
+            "space_complexity": "O(n)",
+            "description": "Constructs optimal prefix codes for data compression using frequency-sorted priority queue",
+            "advantages": [
+              "Produces optimal prefix codes",
+              "Widely used in compression algorithms"
+            ],
+            "disadvantages": [
+              "Requires frequency statistics",
+              "Needs two-pass processing"
+            ],
+            "cpp_implementation": "struct Node {\n    char data;\n    int freq;\n    Node *left, *right;\n    Node(char d, int f) : data(d), freq(f), left(nullptr), right(nullptr) {}\n};\n\nstruct Compare {\n    bool operator()(Node* l, Node* r) { return l->freq > r->freq; }\n};\n\nvoid buildHuffmanCodes(const std::string& text) {\n    std::unordered_map<char, int> freq;\n    for (char c : text) freq[c]++;\n    \n    std::priority_queue<Node*, std::vector<Node*>, Compare> pq;\n    for (auto& pair : freq) pq.push(new Node(pair.first, pair.second));\n    \n    while (pq.size() > 1) {\n        Node* left = pq.top(); pq.pop();\n        Node* right = pq.top(); pq.pop();\n        Node* sum = new Node('$', left->freq + right->freq);\n        sum->left = left;\n        sum->right = right;\n        pq.push(sum);\n    }\n}"
+          },
+          "boyer_moore_voting": {
+            "name": "Boyer-Moore Voting",
+            "category": "greedy",
+            "difficulty": "intermediate",
+            "time_complexity": "O(n)",
+            "space_complexity": "O(1)",
+            "description": "Finds majority element (>n/2 occurrences) in linear time with constant space",
+            "advantages": [
+              "Optimal time and space",
+              "Single pass algorithm"
+            ],
+            "disadvantages": [
+              "Only works for majority elements",
+              "Requires verification pass"
+            ],
+            "cpp_implementation": "int majorityElement(std::vector<int>& nums) {\n    int count = 0, candidate = -1;\n    for (int num : nums) {\n        if (count == 0) candidate = num;\n        count += (num == candidate) ? 1 : -1;\n    }\n    return candidate;\n}"
+    },    
+"strassen": {
+        "name": "Strassen's Algorithm",
+        "category": "divide and conquer",
+        "difficulty": "advanced",
+        "time_complexity": "O(n^2.8074)",
+        "space_complexity": "O(n^2)",
+        "description": "Optimized matrix multiplication using divide-and-conquer to reduce exponent below 3",
+        "advantages": [
+          "Better asymptotic complexity than standard multiplication",
+          "Foundation for improved matrix algorithms"
+        ],
+        "disadvantages": [
+          "High constant factors",
+          "Not practical for small matrices"
+        ],
+        "cpp_implementation": "// Matrix multiplication using Strassen's algorithm (simplified version)\nstd::vector<std::vector<int>> strassenMultiply(std::vector<std::vector<int>>& A, std::vector<std::vector<int>>& B) {\n    // Implementation requires matrix partitioning and recursive steps\n    return {}; // Placeholder"
+      },
+      "closest_pair": {
+        "name": "Closest Pair Problem",
+        "category": "divide and conquer",
+        "difficulty": "advanced",
+        "time_complexity": "O(n log n)",
+        "space_complexity": "O(n)",
+        "description": "Finds closest pair of points in 2D plane using geometric divide-and-conquer",
+        "advantages": [
+          "Optimal divide-and-conquer solution",
+          "Efficient for large point sets"
+        ],
+        "disadvantages": [
+          "Complex implementation",
+          "Requires sorted data structures"
+        ],
+        "cpp_implementation": "// Implementation requires point sorting and strip comparison\n// Placeholder for recursive divide-and-conquer solution"
+      },
+      "kmp": {
+        "name": "Knuth-Morris-Pratt (KMP)",
+        "category": "string matching",
+        "difficulty": "advanced",
+        "time_complexity": "O(n + m)",
+        "space_complexity": "O(m)",
+        "description": "Pattern matching using prefix function to avoid redundant comparisons",
+        "advantages": [
+          "Linear time complexity",
+          "No backtracking in text"
+        ],
+        "disadvantages": [
+          "Complex preprocessing",
+          "Extra space for prefix array"
+        ],
+        "cpp_implementation": "std::vector<int> kmpSearch(const std::string& text, const std::string& pattern) {\n    // Implementation with prefix function and matching state machine\n    return {}; // Placeholder"
+      },
+      "rabin_karp": {
+        "name": "Rabin-Karp",
+        "category": "string matching",
+        "difficulty": "intermediate",
+        "time_complexity": {
+          "average": "O(n + m)",
+          "worst": "O(nm)"
+        },
+        "space_complexity": "O(1)",
+        "description": "Hash-based substring search using rolling hash function",
+        "advantages": [
+          "Efficient for multiple patterns",
+          "Simple implementation"
+        ],
+        "disadvantages": [
+          "Hash collision handling",
+          "Poor worst-case performance"
+        ],
+        "cpp_implementation": "std::vector<int> rabinKarp(const std::string& text, const std::string& pattern) {\n    // Implementation with rolling hash and collision checking\n    return {}; // Placeholder"
+      },
+      "sieve": {
+        "name": "Sieve of Eratosthenes",
+        "category": "mathematical",
+        "difficulty": "beginner",
+        "time_complexity": "O(n log log n)",
+        "space_complexity": "O(n)",
+        "description": "Efficient algorithm for generating prime numbers up to n",
+        "advantages": [
+          "Optimal for prime generation",
+          "Simple to implement"
+        ],
+        "disadvantages": [
+          "Memory intensive for large n",
+          "Not suitable for single prime checks"
+        ],
+        "cpp_implementation": "std::vector<bool> sieve(int n) {\n    std::vector<bool> is_prime(n+1, true);\n    is_prime[0] = is_prime[1] = false;\n    for (int i=2; i*i<=n; i++)\n        if (is_prime[i])\n            for (int j=i*i; j<=n; j+=i)\n                is_prime[j] = false;\n    return is_prime;"
+      },
+      "euclidean": {
+        "name": "Euclidean Algorithm",
+        "category": "mathematical",
+        "difficulty": "beginner",
+        "time_complexity": "O(log min(a, b))",
+        "space_complexity": "O(1)",
+        "description": "Efficient method for computing greatest common divisor (GCD)",
+        "advantages": [
+          "Optimal for GCD computation",
+          "Simple recursive/iterative implementation"
+        ],
+        "disadvantages": [
+          "Limited to integer inputs",
+          "Requires modulus operation"
+        ],
+        "cpp_implementation": "int gcd(int a, int b) {\n    return b == 0 ? a : gcd(b, a % b);\n}"
+      },
+      "mod_exponent": {
+        "name": "Modular Exponentiation",
+        "category": "mathematical",
+        "difficulty": "intermediate",
+        "time_complexity": "O(log exponent)",
+        "space_complexity": "O(1)",
+        "description": "Efficient computation of (base^exponent) mod modulus using binary exponentiation",
+        "advantages": [
+          "Handles large exponents",
+          "Prevents integer overflow"
+        ],
+        "disadvantages": [
+          "Requires understanding of modular arithmetic",
+          "Limited to integer operations"
+        ],
+        "cpp_implementation": "int modExp(int base, int exponent, int modulus) {\n    int result = 1;\n    base %= modulus;\n    while (exponent > 0) {\n        if (exponent % 2 == 1)\n            result = (result * base) % modulus;\n        base = (base * base) % modulus;\n        exponent >>= 1;\n    }\n    return result;\n}"
+    },
+  "linear_probing": {
+        "name": "Linear Probing",
+        "category": "hashing",
+        "difficulty": "intermediate",
+        "time_complexity": {
+          "average": "O(1)",
+          "worst": "O(n)"
+        },
+        "space_complexity": "O(n)",
+        "description": "Open addressing collision resolution using sequential search in hash table",
+        "advantages": [
+          "Simple implementation",
+          "No extra memory for pointers"
+        ],
+        "disadvantages": [
+          "Primary clustering problem",
+          "Degraded performance with high load factor"
+        ],
+        "cpp_implementation": "class HashTable {\n    int* table;\n    int capacity;\npublic:\n    HashTable(int size) : capacity(size) { table = new int[size] { -1 }; }\n    \n    int hash(int key) { return key % capacity; }\n    \n    void insert(int key) {\n        int index = hash(key);\n        while (table[index] != -1)\n            index = (index + 1) % capacity;\n        table[index] = key;\n    }\n};"
+      },
+      "chaining": {
+        "name": "Chaining",
+        "category": "hashing",
+        "difficulty": "beginner",
+        "time_complexity": {
+          "average": "O(1 + α)",
+          "worst": "O(n)"
+        },
+        "space_complexity": "O(n + m)",
+        "description": "Collision resolution using linked lists at each bucket",
+        "advantages": [
+          "Handles arbitrary number of collisions",
+          "Simple to implement"
+        ],
+        "disadvantages": [
+          "Extra memory for pointers",
+          "Cache inefficient"
+        ],
+        "cpp_implementation": "class ChainedHash {\n    std::vector<std::list<int>> table;\npublic:\n    ChainedHash(int size) : table(size) {}\n    \n    void insert(int key) {\n        int index = key % table.size();\n        table[index].push_back(key);\n    }\n    \n    bool search(int key) {\n        int index = key % table.size();\n        for (auto& k : table[index])\n            if (k == key) return true;\n        return false;\n    }\n};"
+      },
+      "tree_traversals": {
+        "name": "Tree Traversals",
+        "category": "tree",
+        "difficulty": "beginner",
+        "time_complexity": "O(n)",
+        "space_complexity": "O(h)",
+        "description": "Depth-first traversal methods for binary trees",
+        "advantages": [
+          "Fundamental tree operations",
+          "Basis for many algorithms"
+        ],
+        "disadvantages": [
+          "Recursive approach uses stack space",
+          "Non-trivial iterative implementations"
+        ],
+        "cpp_implementation": "struct Node { int data; Node *left, *right; };\n\nvoid inorder(Node* root) {\n    if (root) {\n        inorder(root->left);\n        std::cout << root->data << \" \";\n        inorder(root->right);\n    }\n}\n\nvoid preorder(Node* root) {\n    if (root) {\n        std::cout << root->data << \" \";\n        preorder(root->left);\n        preorder(root->right);\n    }\n}"
+      },
+      "avl_tree": {
+        "name": "AVL Tree",
+        "category": "tree",
+        "difficulty": "advanced",
+        "time_complexity": "O(log n)",
+        "space_complexity": "O(n)",
+        "description": "Self-balancing BST with height difference constraint of 1 between subtrees",
+        "advantages": [
+          "Guaranteed O(log n) operations",
+          "Efficient search times"
+        ],
+        "disadvantages": [
+          "Complex rotation logic",
+          "Overhead in balancing"
+        ],
+        "cpp_implementation": "struct AVLNode {\n    int key, height;\n    AVLNode *left, *right;\n    AVLNode(int k) : key(k), height(1), left(nullptr), right(nullptr) {}\n};\n\nAVLNode* rotateRight(AVLNode* y) {\n    AVLNode* x = y->left;\n    y->left = x->right;\n    x->right = y;\n    y->height = 1 + std::max(height(y->left), height(y->right));\n    x->height = 1 + std::max(height(x->left), height(x->right));\n    return x;\n}"
+      },
+      "red_black_tree": {
+        "name": "Red-Black Tree",
+        "category": "tree",
+        "difficulty": "advanced",
+        "time_complexity": "O(log n)",
+        "space_complexity": "O(n)",
+        "description": "Self-balancing BST with color properties and height balancing constraints",
+        "advantages": [
+          "Efficient insert/delete operations",
+          "Less strict balancing than AVL"
+        ],
+        "disadvantages": [
+          "Complex implementation",
+          "More memory for color storage"
+        ],
+        "cpp_implementation": "enum Color { RED, BLACK };\n\nstruct RBNode {\n    int data;\n    Color color;\n    RBNode *left, *right, *parent;\n    RBNode(int d) : data(d), color(RED), left(nullptr), right(nullptr), parent(nullptr) {}\n};"
+      },
+      "array_rotation": {
+        "name": "Array Rotation",
+        "category": "array",
+        "difficulty": "intermediate",
+        "time_complexity": "O(n)",
+        "space_complexity": "O(1)",
+        "description": "Rotate array elements by k positions using reversal algorithm",
+        "advantages": [
+          "In-place rotation",
+          "Optimal time complexity"
+        ],
+        "disadvantages": [
+          "Non-intuitive algorithm",
+          "Multiple passes needed"
+        ],
+        "cpp_implementation": "void rotateArray(std::vector<int>& arr, int k) {\n    k %= arr.size();\n    std::reverse(arr.begin(), arr.end());\n    std::reverse(arr.begin(), arr.begin() + k);\n    std::reverse(arr.begin() + k, arr.end());\n}"
+      },
+      "two_pointer": {
+        "name": "Two-Pointer Technique",
+        "category": "array",
+        "difficulty": "intermediate",
+        "time_complexity": "O(n)",
+        "space_complexity": "O(1)",
+        "description": "Efficient array traversal using pair of indices to reduce time complexity",
+        "advantages": [
+          "Linear time complexity",
+          "Reduces nested loops"
+        ],
+        "disadvantages": [
+          "Requires sorted array for some problems",
+          "Not applicable to all scenarios"
+        ],
+        "cpp_implementation": "std::pair<int, int> twoSum(std::vector<int>& arr, int target) {\n    int left = 0, right = arr.size() - 1;\n    while (left < right) {\n        int sum = arr[left] + arr[right];\n        if (sum == target) return {left, right};\n        if (sum < target) left++;\n        else right--;\n    }\n    return {-1, -1};"
+      },
+      "waveform_sort": {
+        "name": "Waveform Sorting",
+        "category": "array",
+        "difficulty": "intermediate",
+        "time_complexity": "O(n)",
+        "space_complexity": "O(1)",
+        "description": "Arrange array in wave pattern (a[0] >= a[1] <= a[2] >= a[3]...)",
+        "advantages": [
+          "In-place transformation",
+          "Linear time complexity"
+        ],
+        "disadvantages": [
+          "Not a complete sort",
+          "Specific pattern requirement"
+        ],
+        "cpp_implementation": "void waveSort(std::vector<int>& arr) {\n    for (int i = 0; i < arr.size(); i += 2) {\n        if (i > 0 && arr[i-1] > arr[i])\n            std::swap(arr[i], arr[i-1]);\n        if (i < arr.size()-1 && arr[i] < arr[i+1])\n            std::swap(arr[i], arr[i+1]);\n    }\n}"
+  },
+  "cycle_detection": {
+      "name": "Cycle Detection (Floyd's Algorithm)",
+      "category": "linked_list",
+      "difficulty": "intermediate",
+      "time_complexity": "O(n)",
+      "space_complexity": "O(1)",
+      "description": "Detects cycles in linked lists using slow/fast pointer approach",
+      "advantages": [
+        "Constant space complexity",
+        "No modification to original list"
+      ],
+      "disadvantages": [
+        "Only detects cycle presence, not entry point",
+        "Requires two pointers"
+      ],
+      "cpp_implementation": "bool hasCycle(ListNode* head) {\n    ListNode *slow = head, *fast = head;\n    while (fast && fast->next) {\n        slow = slow->next;\n        fast = fast->next->next;\n        if (slow == fast) return true;\n    }\n    return false;\n}"
+    },
+    "reverse_linked_list": {
+      "name": "Linked List Reversal",
+      "category": "linked_list",
+      "difficulty": "intermediate",
+      "time_complexity": "O(n)",
+      "space_complexity": {
+        "iterative": "O(1)",
+        "recursive": "O(n)"
+      },
+      "description": "Reverses linked list using iterative or recursive pointer manipulation",
+      "advantages": [
+        "Fundamental linked list operation",
+        "Iterative version is space-efficient"
+      ],
+      "disadvantages": [
+        "Recursive version has stack overhead",
+        "Modifies original list structure"
+      ],
+      "cpp_implementation": "// Iterative\nListNode* reverseIterative(ListNode* head) {\n    ListNode *prev = nullptr, *curr = head;\n    while (curr) {\n        ListNode* next = curr->next;\n        curr->next = prev;\n        prev = curr;\n        curr = next;\n    }\n    return prev;\n}\n\n// Recursive\nListNode* reverseRecursive(ListNode* head) {\n    if (!head || !head->next) return head;\n    ListNode* rest = reverseRecursive(head->next);\n    head->next->next = head;\n    head->next = nullptr;\n    return rest;\n}"
+    },
+    "heapify": {
+      "name": "Heapify",
+      "category": "heap",
+      "difficulty": "intermediate",
+      "time_complexity": "O(n)",
+      "space_complexity": "O(1)",
+      "description": "Converts array into valid max-heap/min-heap structure",
+      "advantages": [
+        "Efficient in-place conversion",
+        "Linear time complexity"
+      ],
+      "disadvantages": [
+        "Requires understanding heap properties",
+        "Needs index calculations"
+      ],
+      "cpp_implementation": "void heapify(std::vector<int>& arr, int n, int i) {\n    int largest = i;\n    int left = 2*i + 1;\n    int right = 2*i + 2;\n\n    if (left < n && arr[left] > arr[largest])\n        largest = left;\n    if (right < n && arr[right] > arr[largest])\n        largest = right;\n    if (largest != i) {\n        std::swap(arr[i], arr[largest]);\n        heapify(arr, n, largest);\n    }\n}\n\nvoid buildHeap(std::vector<int>& arr) {\n    for (int i = arr.size()/2 - 1; i >= 0; i--)\n        heapify(arr, arr.size(), i);\n}"
+    },
+    "extract_min_max": {
+      "name": "Extract Min/Max",
+      "category": "heap",
+      "difficulty": "intermediate",
+      "time_complexity": "O(log n)",
+      "space_complexity": "O(1)",
+      "description": "Removes and returns root element from heap while maintaining properties",
+      "advantages": [
+        "Essential for priority queue operations",
+        "Maintains heap invariant"
+      ],
+      "disadvantages": [
+        "Requires heap reorganization",
+        "Limited to root element access"
+      ],
+      "cpp_implementation": "int extractMax(std::vector<int>& heap) {\n    if (heap.empty()) return -1;\n    int max = heap[0];\n    heap[0] = heap.back();\n    heap.pop_back();\n    heapify(heap, heap.size(), 0);\n    return max;\n}\n\n// For min-heap, modify comparisons in heapify"
+    }
+}
